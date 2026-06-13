@@ -11,9 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { uploadFile } from "@/lib/global";
+import { useAuth } from "@/app/auth-provider";
 
 export default function CreatePostPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
@@ -24,7 +26,7 @@ export default function CreatePostPage() {
   const createPost = useMutation(api.posts.createPost);
   const generateUploadUrl = useMutation(api.storage.generateUploadUrl);
 
-  const userId = localStorage.getItem("blog_userId");
+  const userId = user?._id;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
