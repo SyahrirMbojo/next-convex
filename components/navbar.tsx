@@ -62,15 +62,17 @@ export default function Navbar() {
                 Posts
               </Button>
             </Link>
-            <Link href="/users">
-              <Button variant={isActive("/users") ? "default" : "ghost"}>
-                Users
-              </Button>
-            </Link>
+            {user && (
+              <Link href="/users">
+                <Button variant={isActive("/users") ? "default" : "ghost"}>
+                  Users
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {user && (
+          {user ? (
             <>
               <span className="flex items-center text-sm font-medium">
                 Hi, {user.name}
@@ -79,6 +81,10 @@ export default function Navbar() {
                 Logout
               </Button>
             </>
+          ) : (
+            <Button onClick={handleLogout} size="sm" variant="outline">
+              Login
+            </Button>
           )}
         </div>
       </div>

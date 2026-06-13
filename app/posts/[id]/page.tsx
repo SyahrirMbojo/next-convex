@@ -10,10 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import { useAuth } from "@/app/auth-provider";
 
 export default function PostPage() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useAuth();
   const postId = params.id as Id<"posts">;
   const [comment, setComment] = useState("");
 
@@ -22,7 +24,7 @@ export default function PostPage() {
   const deleteComment = useMutation(api.posts.deleteComment);
 
   const isLoading = data === undefined;
-  const userId = localStorage.getItem("blog_userId") as Id<"users">;
+  const userId = user?._id as Id<"users">;
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +90,7 @@ export default function PostPage() {
       <section>
         <h2 className="mb-4 font-semibold text-2xl">Comments</h2>
 
-        {userId && (
+        {user && (
           <form className="mb-6" onSubmit={handleSubmitComment}>
             <Textarea
               className="mb-2"

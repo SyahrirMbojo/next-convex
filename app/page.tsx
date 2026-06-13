@@ -25,10 +25,6 @@ export default async function Page() {
           <HomeView initialItems={posts} />
         </Suspense>
       </section>
-
-      <div className="mt-8 text-center text-muted-foreground text-sm">
-        Press <kbd className="font-mono">d</kbd> to toggle dark mode
-      </div>
     </div>
   );
 }

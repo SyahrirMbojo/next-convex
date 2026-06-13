@@ -10,7 +10,15 @@ export default function MainBody({ children }: { children: ReactNode }) {
   return (
     <div className="w-full mx-auto max-w-4xl">
       {!isAuth && <Navbar />}
-      <div className="container mt-20 pb-6 px-6 lg:px-0">{children}</div>
+      <div
+        className={
+          isAuth
+            ? "container px-6 lg:px-0"
+            : "container mt-20 pb-6 px-6 lg:px-0"
+        }
+      >
+        {children}
+      </div>
     </div>
   );
 }
