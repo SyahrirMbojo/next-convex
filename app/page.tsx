@@ -1,19 +1,34 @@
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { api } from "@/convex/_generated/api";
+import { fetchQuery } from "convex/nextjs";
+import { Suspense } from "react";
+import HomeView from "@/components/home-view";
 
-export default function Page() {
+export default async function Page() {
+  const data = await fetchQuery(api.posts.getPosts, { numItems: 5 });
+  const posts = data?.items ?? [];
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
+    <div className="container">
+      <section>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-semibold text-xl">Latest Posts</h2>
+          <Link href="/posts">
+            <Button size="sm" variant="ghost">
+              View All
+            </Button>
+          </Link>
         </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <HomeView initialItems={posts} />
+        </Suspense>
+      </section>
+
+      <div className="mt-8 text-center text-muted-foreground text-sm">
+        Press <kbd className="font-mono">d</kbd> to toggle dark mode
       </div>
     </div>
-  )
+  );
 }

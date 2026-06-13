@@ -1,5 +1,13 @@
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {}
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: "optimistic-mallard-238.convex.cloud",
+      },
+    ],
+  },
+};
 
-export default nextConfig
+export default nextConfig;

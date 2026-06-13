@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "off",
+        "noUnusedFunctionParameters": "off",
+        "noUnusedImports": "info"
+      },
+      "performance": {
+        "noNamespaceImport": "off",
+        "useTopLevelRegex": "off"
+      },
+      "nursery": {
+        "useSortedClasses": "off"
+      },
+      "suspicious": {
+        "noBitwiseOperators": "off",
+        "noEmptyBlockStatements": "off"
+      },
+      "style": {
+        "useConst": "off",
+        "useImportType": "off",
+        "useAtIndex": "off",
+        "noNonNullAssertion": "off",
+        "useConsistentArrowReturn": "off"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "useSortedInterfaceMembers": "off",
+        "organizeImports": "off",
+        "useSortedAttributes": "off"
+      }
+    }
+  }
+}
