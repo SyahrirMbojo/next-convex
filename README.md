@@ -19,3 +19,12 @@ To use the components in your app, import them as follows:
 ```tsx
 import { Button } from "@/components/ui/button";
 ```
+
+## Run Agent Free
+
+Running claude untuk mengaktifkan claude ai agent
+command: claude
+command: exit
+
+Running ai ollama:
+ollama launch claude --model minimax-m2.5:cloud

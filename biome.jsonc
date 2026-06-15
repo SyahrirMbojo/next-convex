@@ -16,7 +16,8 @@
       "correctness": {
         "noUnusedVariables": "off",
         "noUnusedFunctionParameters": "off",
-        "noUnusedImports": "info"
+        "noUnusedImports": "info",
+        "useParseIntRadix": "off"
       },
       "performance": {
         "noNamespaceImport": "off",
@@ -27,14 +28,19 @@
       },
       "suspicious": {
         "noBitwiseOperators": "off",
-        "noEmptyBlockStatements": "off"
+        "noEmptyBlockStatements": "off",
+        "noDocumentCookie": "off"
       },
       "style": {
         "useConst": "off",
         "useImportType": "off",
         "useAtIndex": "off",
         "noNonNullAssertion": "off",
-        "useConsistentArrowReturn": "off"
+        "useConsistentArrowReturn": "off",
+        "useBlockStatements": "off",
+        "noUnusedTemplateLiteral": "off",
+        "useNumberNamespace": "off",
+        "useTemplate": "off"
       }
     }
   },

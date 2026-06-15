@@ -5,41 +5,6 @@ import { action } from "./_generated/server";
 import type { ResultUser } from "../app/users/user-model";
 import { Id } from "./_generated/dataModel";
 
-// JWT Secret - in production, use environment variable
-const JWT_SECRET =
-  process.env.JWT_SECRET || "your-secret-key-change-in-production";
-const JWT_EXPIRY = process.env.JWT_EXPIRY || "24h";
-
-function base64UrlEncode(str: string): string {
-  return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-function createJWT(payload: Record<string, unknown>): string {
-  const header = { alg: "HS256", typ: "JWT" };
-  const encodedHeader = base64UrlEncode(JSON.stringify(header));
-  const encodedPayload = base64UrlEncode(
-    JSON.stringify({
-      ...payload,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + parseJWTExpiry() * 24 * 60 * 60,
-    }),
-  );
-
-  const signature = base64UrlEncode(
-    JWT_SECRET + "." + encodedHeader + "." + encodedPayload,
-  );
-
-  return `${encodedHeader}.${encodedPayload}.${signature}`;
-}
-
-function parseJWTExpiry(): number {
-  const expiry = JWT_EXPIRY;
-  if (expiry.endsWith("d")) return parseInt(expiry.slice(0, -1));
-  if (expiry.endsWith("h")) return parseInt(expiry.slice(0, -1)) / 24;
-  if (expiry.endsWith("m")) return parseInt(expiry.slice(0, -1)) / (24 * 60);
-  return 7;
-}
-
 // Register a new user
 export const register = action({
   args: {
@@ -78,7 +43,7 @@ export const login = action({
     email: v.string(),
     password: v.string(),
   },
-  handler: async (ctx, args): Promise<ResultUser & { token: string }> => {
+  handler: async (ctx, args): Promise<ResultUser> => {
     const user = await ctx.runQuery(api.users.checkUserByEmail, {
       email: args.email,
     });
@@ -92,16 +57,6 @@ export const login = action({
       throw new Error("Invalid email or password");
     }
 
-    // Generate JWT token
-    const token = createJWT({
-      userId: user._id,
-      email: user.email,
-      name: user.name,
-      imageUrl: user.imageUrl,
-      created: user.createdAt,
-      updated: user.updatedAt,
-    });
-
     return {
       userId: user._id,
       name: user.name,
@@ -109,7 +64,6 @@ export const login = action({
       imageUrl: user.imageUrl,
       created: user.createdAt,
       updated: user.updatedAt,
-      token,
     };
   },
 });

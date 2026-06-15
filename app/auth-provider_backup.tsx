@@ -10,8 +10,6 @@ import {
 import { Id } from "@/convex/_generated/dataModel";
 import { useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { setAuthCookie, getAuthCookie, removeAuthCookie, setUserCookie, getUserCookie, removeUserCookie } from "@/lib/cookies";
-import { verifyJWT } from "@/lib/jwt";
 
 interface User {
 	_id: Id<"users">;
@@ -35,84 +33,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const initAuth = async () => {
-			// First try to get user from cookie
-			const storedUser = getUserCookie();
-			if (storedUser) {
+		 const storedUser = localStorage.getItem("blog_user");
+		 const storedId = localStorage.getItem("blog_userId");
+		 if (storedUser && storedId) {
 				setUser({
-					_id: storedUser.userId as Id<"users">,
-					name: storedUser.name,
-					email: storedUser.email,
-					image: storedUser.imageUrl,
+				_id: storedId as Id<"users">,
+				name: storedUser,
+				email: "",
 				});
-				setLoading(false);
-				return;
 			}
-
-			// If no user cookie, check if there's a valid JWT token
-			const token = getAuthCookie();
-			if (token) {
-				const payload = await verifyJWT(token);
-				if (payload) {
-					setUser({
-						_id: payload.userId as Id<"users">,
-						name: payload.name,
-						email: payload.email,
-						image: payload.imageUrl,
-					});
-					// Restore user data cookie
-					setUserCookie(payload);
-					setLoading(false);
-					return;
-				}
-			}
-
-			setLoading(false);
-		};
-
-		initAuth();
+      setLoading(false);
 	}, []);
 
 	const loginAction = useAction(api.auth.login);
-	const registerMutation = useAction(api.auth.register);
+  	const registerMutation = useAction(api.auth.register);
 
 	const login = async (email: string, password: string) => {
 		const result = await loginAction({ email, password });
-
-		const userData: User = {
+		setUser({
 			_id: result.userId as Id<"users">,
 			name: result.name,
 			email: result.email,
-			image: result.imageUrl,
-		};
-
-		setUser(userData);
-
-		// Store JWT token in cookie
-		if (result.token) {
-			setAuthCookie(result.token);
-		}
-
-		// Store user data in cookie for quick access
-		setUserCookie({
-			userId: result.userId,
-			email: result.email,
-			name: result.name,
-			imageUrl: result.imageUrl,
-			created: result.created,
-			updated: result.updated,
-		});
+		})
+  
+		localStorage.setItem("blog_user", result.name);
+		localStorage.setItem("blog_userId", result.userId);
 	};
+	
 
 	const register = async (email: string, password: string, name: string) => {
 		await registerMutation({ email, password, name });
-		await login(email, password);
+  		await login(email, password);
 	};
 
 	const logout = () => {
 		setUser(null);
-		removeAuthCookie();
-		removeUserCookie();
+		localStorage.removeItem("blog_user");
+		localStorage.removeItem("blog_userId");
 	};
 
 	return (
