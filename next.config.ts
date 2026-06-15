@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
       {
         hostname: "optimistic-mallard-238.convex.cloud",
       },
+      {
+        hostname: "handsome-raccoon-260.convex.cloud",
+      },
     ],
   },
 };
